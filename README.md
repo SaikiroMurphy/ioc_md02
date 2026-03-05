@@ -1,2 +1,2 @@
-username: admin\n
+username: admin
 password: admin123
