@@ -1,5 +1,7 @@
 package ioc_md02.model;
 
+import java.util.Scanner;
+
 public interface IModel {
-    void inputData();
+    void inputData(Scanner scanner);
 }

@@ -9,9 +9,20 @@ import ioc_md02.model.Product;
 import ioc_md02.utils.DBUtil;
 
 public class ProductDAOImpl implements IProductDAO{
+    private static ProductDAOImpl instance;
+
+    private ProductDAOImpl() {
+    }
+
+    public static synchronized ProductDAOImpl getInstance() {
+        if (instance == null) {
+            instance = new ProductDAOImpl();
+        }
+        return instance;
+    }
 
     @Override
-    public void addProduct(Product product) {
+    public boolean addProduct(Product product) {
         try(Connection conn = DBUtil.getConnection()) {
             PreparedStatement ps = conn.prepareStatement("INSERT INTO products (name, brand, price, stock) VALUES (?, ?, ?, ?)");
             ps.setString(1, product.getName());
@@ -19,14 +30,16 @@ public class ProductDAOImpl implements IProductDAO{
             ps.setDouble(3, product.getPrice());
             ps.setInt(4, product.getStock());
             ps.execute();
-            System.out.println("Thêm điện thoại thành công!");
+            System.out.println("Thêm sản phẩm thành công!");
+            return true;
         } catch (Exception e) {
-            System.out.println("Thêm sản phẩm thất bại: " + e.getMessage());
+            System.out.println("Lỗi khi thêm sản phẩm: " + e.getMessage());
+            return false;
         }
     }
 
     @Override
-    public void updateProduct(int id, Product product) {
+    public boolean updateProduct(int id, Product product) {
         try(Connection conn = DBUtil.getConnection()) {
             PreparedStatement ps = conn.prepareStatement("UPDATE products SET name = ?, brand = ?, price = ?, stock = ? WHERE id = ?");
             ps.setString(1, product.getName());
@@ -35,21 +48,25 @@ public class ProductDAOImpl implements IProductDAO{
             ps.setInt(4, product.getStock());
             ps.setInt(5, id);
             ps.execute();
-            System.out.println("Sản phẩm đã được cập nhật thành công!");
+            System.out.println("Cập nhật sản phẩm thành công!");
+            return true;
         } catch (Exception e) {
             System.out.println("Lỗi khi cập nhật sản phẩm: " + e.getMessage());
+            return false;
         }
     }
 
     @Override
-    public void deleteProduct(int id) {
+    public boolean deleteProduct(int id) {
         try(Connection conn = DBUtil.getConnection()) {
             PreparedStatement ps = conn.prepareStatement("DELETE FROM products WHERE id = ?");
             ps.setInt(1, id);
             ps.execute();
-            System.out.println("Sản phẩm đã được xóa thành công!");
+            System.out.println("Xóa sản phẩm thành công!");
+            return true;
         } catch (Exception e) {
             System.out.println("Lỗi khi xóa sản phẩm: " + e.getMessage());
+            return false;
         }
     }
 

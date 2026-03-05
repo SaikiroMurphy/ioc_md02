@@ -1,5 +1,7 @@
 package ioc_md02.model;
 
+import java.util.Scanner;
+
 public class Admin implements IModel{
     private int id;
     private String username;
@@ -44,7 +46,23 @@ public class Admin implements IModel{
     }
 
     @Override
-    public void inputData() {
-        System.out.println("Admin input data");
+    public void inputData(Scanner scanner) {
+        while(true) {
+            System.out.print("Nhập username: ");
+            this.username = scanner.nextLine();
+            if (!this.username.trim().isEmpty()) {
+                break;
+            }
+            System.out.println("Username không được để trống!");
+        }
+
+        while(true) {
+            System.out.print("Nhập password: ");
+            this.password = scanner.nextLine();
+            if (!this.password.trim().isEmpty()) {
+                break;
+            }
+            System.out.println("Password không được để trống!");
+        }
     }
 }

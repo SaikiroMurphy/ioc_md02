@@ -1,5 +1,7 @@
 package ioc_md02.model;
 
+import java.util.Scanner;
+
 public class Customer implements IModel{
     private int id;
     private String name;
@@ -65,9 +67,22 @@ public class Customer implements IModel{
     }
 
     @Override
-    public void inputData() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'inputData'");
+    public void inputData(Scanner scanner) {
+        while (true) {
+            System.out.print("Nhập tên khách hàng: ");
+            this.name = scanner.nextLine();
+            if (!this.name.trim().isEmpty()) {
+                break;
+            }
+            System.out.println("Tên khách hàng không được để trống!");
+        }
+
+        System.out.print("Nhập số điện thoại: ");
+        this.phone = scanner.nextLine();
+        System.out.print("Nhập email: ");
+        this.email = scanner.nextLine();
+        System.out.print("Nhập địa chỉ: ");
+        this.address = scanner.nextLine();
     }
 
 }

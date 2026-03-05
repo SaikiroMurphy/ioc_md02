@@ -9,18 +9,29 @@ import ioc_md02.model.Invoice;
 import ioc_md02.utils.DBUtil;
 
 public class InvoiceDAOImpl implements IInvoiceDAO{
+    private static InvoiceDAOImpl instance;
+
+    private InvoiceDAOImpl() {
+    }
+
+    public static synchronized InvoiceDAOImpl getInstance() {
+        if (instance == null) {
+            instance = new InvoiceDAOImpl();
+        }
+        return instance;
+    }
 
     @Override
-    public void addInvoice(Invoice invoice) {
+    public boolean addInvoice(Invoice invoice) {
         try(Connection conn = DBUtil.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO invoices (customer_id, created_at, total_amount) VALUES (?, ?, ?)");
             stmt.setInt(1, invoice.getCustomerId());
             stmt.setString(2, invoice.getCreatedAt().toString());
             stmt.setDouble(3, invoice.getTotalAmount());
             stmt.execute();
-            System.out.println("Hóa đơn đã được thêm thành công!");
+            return true;
         } catch (Exception e) {
-            System.out.println("Lỗi khi thêm hóa đơn: " + e.getMessage());
+            return false;
         }
 
     }

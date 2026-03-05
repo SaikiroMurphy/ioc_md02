@@ -1,0 +1,59 @@
+package ioc_md02.presentation;
+
+import java.util.Scanner;
+
+import ioc_md02.business.impl.ProductServiceImpl;
+
+public class ProductView {
+    private static ProductView instance;
+
+    private ProductView() {}
+
+    public static ProductView getInstance() {
+        if (instance == null) {
+            instance = new ProductView();
+        }
+        return instance;
+    }
+
+    public void showProductMenu(Scanner scanner) {
+        while (true) {
+            System.out.println();
+            System.out.println("========== QUẢN LÝ SẢN PHẨM ==========");
+            System.out.println("1. Xem danh sách sản phẩm");
+            System.out.println("2. Thêm sản phẩm mới");
+            System.out.println("3. Cập nhật sản phẩm");
+            System.out.println("4. Xóa sản phẩm");
+            System.out.println("5. Quay lại menu chính");
+            System.out.println("======================================");
+
+            int choice = -1;
+            try {
+                System.out.print("Vui lòng chọn (1-5): ");
+                choice = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Vui lòng nhập một số hợp lệ!");
+                continue;
+            }
+
+            switch (choice) {
+                case 1:
+                    ProductServiceImpl.getInstance().getAllProducts();
+                    break;
+                case 2:
+                    ProductServiceImpl.getInstance().addProduct(scanner);
+                    break;
+                case 3:
+                    ProductServiceImpl.getInstance().updateProduct(scanner);
+                    break;
+                case 4:
+                    ProductServiceImpl.getInstance().deleteProduct(scanner);
+                    break;
+                case 5:
+                    return; // Quay lại menu chính
+                default:
+                    System.out.println("Lựa chọn không hợp lệ!");
+            }
+        }
+    }
+}

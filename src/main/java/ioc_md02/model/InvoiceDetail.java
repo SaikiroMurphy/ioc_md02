@@ -1,5 +1,7 @@
 package ioc_md02.model;
 
+import java.util.Scanner;
+
 public class InvoiceDetail implements IModel{
     private int id;
     private int invoiceId;
@@ -66,7 +68,7 @@ public class InvoiceDetail implements IModel{
     }
 
     @Override
-    public void inputData() {
+    public void inputData(Scanner scanner) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'inputData'");
     }

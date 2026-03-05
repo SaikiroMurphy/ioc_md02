@@ -5,9 +5,9 @@ import java.sql.ResultSet;
 import ioc_md02.model.Product;
 
 public interface IProductDAO {
-    void addProduct(Product product);
-    void updateProduct(int id, Product product);
-    void deleteProduct(int id);
+    boolean addProduct(Product product);
+    boolean updateProduct(int id, Product product);
+    boolean deleteProduct(int id);
     Product getProductById(int id);
     ResultSet getAllProducts();
     ResultSet getProductsByBrand(String brand);

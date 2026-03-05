@@ -9,9 +9,20 @@ import ioc_md02.utils.DBUtil;
 import ioc_md02.model.InvoiceDetail;
 
 public class InvoiceDetailDAOImpl implements IInvoiceDetailDAO{
+    private static InvoiceDetailDAOImpl instance;
+
+    private InvoiceDetailDAOImpl() {
+    }
+
+    public static synchronized InvoiceDetailDAOImpl getInstance() {
+        if (instance == null) {
+            instance = new InvoiceDetailDAOImpl();
+        }
+        return instance;
+    }
 
     @Override
-    public void addInvoiceDetail(InvoiceDetail invoiceDetail) {
+    public boolean addInvoiceDetail(InvoiceDetail invoiceDetail) {
         try(Connection conn = DBUtil.getConnection()) {
             PreparedStatement ps = conn.prepareStatement("INSERT INTO invoice_details (invoice_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)");
             ps.setInt(1, invoiceDetail.getInvoiceId());
@@ -19,9 +30,9 @@ public class InvoiceDetailDAOImpl implements IInvoiceDetailDAO{
             ps.setInt(3, invoiceDetail.getQuantity());
             ps.setDouble(4, invoiceDetail.getUnitPrice());
             ps.execute();
-            System.out.println("Thêm chi tiết hóa đơn thành công!");
+            return true;
         } catch (Exception e) {
-            System.out.println("Lỗi khi thêm chi tiết hóa đơn: " + e.getMessage());
+            return false;
         }
     }
 

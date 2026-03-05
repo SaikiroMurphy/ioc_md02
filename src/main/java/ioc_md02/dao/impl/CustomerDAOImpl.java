@@ -9,9 +9,20 @@ import ioc_md02.model.Customer;
 import ioc_md02.utils.DBUtil;
 
 public class CustomerDAOImpl implements ICustomerDAO{
+    private static CustomerDAOImpl instance;
+
+    private CustomerDAOImpl() {
+    }
+
+    public static synchronized CustomerDAOImpl getInstance() {
+        if (instance == null) {
+            instance = new CustomerDAOImpl();
+        }
+        return instance;
+    }
 
     @Override
-    public void addCustomer(Customer customer) {
+    public boolean addCustomer(Customer customer) {
         try(Connection conn = DBUtil.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO customers (name, phone, email, address) VALUES (?, ?, ?, ?)");
             stmt.setString(1, customer.getName());
@@ -20,13 +31,15 @@ public class CustomerDAOImpl implements ICustomerDAO{
             stmt.setString(4, customer.getAddress());
             stmt.execute();
             System.out.println("Thêm khách hàng thành công!");
+            return true;
         } catch (Exception e) {
             System.out.println("Lỗi khi thêm khách hàng: " + e.getMessage());
+            return false;
         }
     }
 
     @Override
-    public void updateCustomer(int id, Customer customer) {
+    public boolean updateCustomer(int id, Customer customer) {
         try(Connection conn = DBUtil.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("UPDATE customers SET name = ?, phone = ?, email = ?, address = ? WHERE id = ?");
             stmt.setString(1, customer.getName());
@@ -36,28 +49,33 @@ public class CustomerDAOImpl implements ICustomerDAO{
             stmt.setInt(5, id);
             int rowsUpdated = stmt.executeUpdate();
             if (rowsUpdated > 0) {
-                System.out.println("Khách hàng đã được cập nhật thành công!");
+                return true;
             } else {
                 System.out.println("Khách hàng không tồn tại với ID: " + id);
+                return false;
             }
         } catch (Exception e) {
             System.out.println("Lỗi khi cập nhật khách hàng: " + e.getMessage());
+            return false;
         }
     }
 
     @Override
-    public void deleteCustomer(int id) {
+    public boolean deleteCustomer(int id) {
         try(Connection conn = DBUtil.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("DELETE FROM customers WHERE id = ?");
             stmt.setInt(1, id);
             int rowsDeleted = stmt.executeUpdate();
             if (rowsDeleted > 0) {
                 System.out.println("Khách hàng đã được xóa thành công!");
+                return true;
             } else {
                 System.out.println("Khách hàng không tồn tại với ID: " + id);
+                return false;
             }
         } catch (Exception e) {
             System.out.println("Lỗi khi xóa khách hàng: " + e.getMessage());
+            return false;
         }
     }
 

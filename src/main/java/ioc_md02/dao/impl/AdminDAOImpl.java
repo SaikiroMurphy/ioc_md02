@@ -4,28 +4,43 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import ioc_md02.dao.IAdminDAO;
 import ioc_md02.model.Admin;
 import ioc_md02.utils.DBUtil;
 
 public class AdminDAOImpl implements IAdminDAO {
+    private static AdminDAOImpl instance;
+
+    private AdminDAOImpl() {
+    }
+
+    public static synchronized AdminDAOImpl getInstance() {
+        if (instance == null) {
+            instance = new AdminDAOImpl();
+        }
+        return instance;
+    }
 
     @Override
-    public void login(Admin admin) {
+    public boolean login(Admin admin) {
         try (Connection conn = DBUtil.getConnection()) {
-            String sql = "SELECT * FROM admins WHERE username = ? AND password = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, admin.getUsername());
-            stmt.setString(2, admin.getPassword());
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM admins");
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                System.out.println("Đăng nhập thành công cho admin: " + admin.getUsername());
-            } else {
-                System.out.println("Đăng nhập thất bại cho admin: " + admin.getUsername());
+
+            while (rs.next()) {
+                String username = rs.getString("username");
+                String passwordHash = rs.getString("password");
+
+                if (username.equals(admin.getUsername()) && BCrypt.checkpw(admin.getPassword(), passwordHash)) {
+                    return true;
+                }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error during login: " + e.getMessage());
         }
+        return false;
     }
 
 }

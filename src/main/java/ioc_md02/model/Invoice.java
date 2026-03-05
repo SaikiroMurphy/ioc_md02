@@ -1,6 +1,7 @@
 package ioc_md02.model;
 
 import java.time.LocalDateTime;
+import java.util.Scanner;
 
 public class Invoice implements IModel{
     private int id;
@@ -69,7 +70,7 @@ public class Invoice implements IModel{
 
 
     @Override
-    public void inputData() {
+    public void inputData(Scanner scanner) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'inputData'");
     }
