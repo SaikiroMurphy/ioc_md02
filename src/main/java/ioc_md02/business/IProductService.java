@@ -11,8 +11,10 @@ public interface IProductService {
     void updateProduct(Scanner scanner);
     void deleteProduct(Scanner scanner);
     Product getProductById(Scanner scanner);
-    ResultSet getProductsByBrand(Scanner scanner);
-    ResultSet getProductsByPriceRange(Scanner scanner);
-    ResultSet getProductsByName(Scanner scanner);
-    ResultSet getProductsByStock(Scanner scanner);
+    void getProductsByBrand(Scanner scanner);
+    void getProductsByPriceRange(Scanner scanner);
+    void getProductsByName(Scanner scanner);
+    void getProductsByStock(Scanner scanner);
+    void displayProducts(ResultSet rs);
+    void displayProducts(Product product);
 }

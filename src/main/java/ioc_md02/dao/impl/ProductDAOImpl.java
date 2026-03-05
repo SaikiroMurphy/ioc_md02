@@ -29,8 +29,9 @@ public class ProductDAOImpl implements IProductDAO{
             ps.setString(2, product.getBrand());
             ps.setDouble(3, product.getPrice());
             ps.setInt(4, product.getStock());
-            ps.execute();
-            System.out.println("Thêm sản phẩm thành công!");
+            if (ps.executeUpdate() == 0){
+                return false;
+            }
             return true;
         } catch (Exception e) {
             System.out.println("Lỗi khi thêm sản phẩm: " + e.getMessage());
@@ -47,8 +48,9 @@ public class ProductDAOImpl implements IProductDAO{
             ps.setDouble(3, product.getPrice());
             ps.setInt(4, product.getStock());
             ps.setInt(5, id);
-            ps.execute();
-            System.out.println("Cập nhật sản phẩm thành công!");
+            if (ps.executeUpdate() == 0) {
+                return false;
+            }
             return true;
         } catch (Exception e) {
             System.out.println("Lỗi khi cập nhật sản phẩm: " + e.getMessage());
@@ -61,8 +63,9 @@ public class ProductDAOImpl implements IProductDAO{
         try(Connection conn = DBUtil.getConnection()) {
             PreparedStatement ps = conn.prepareStatement("DELETE FROM products WHERE id = ?");
             ps.setInt(1, id);
-            ps.execute();
-            System.out.println("Xóa sản phẩm thành công!");
+            if (ps.executeUpdate() == 0) {
+                return false;
+            }
             return true;
         } catch (Exception e) {
             System.out.println("Lỗi khi xóa sản phẩm: " + e.getMessage());
@@ -105,7 +108,7 @@ public class ProductDAOImpl implements IProductDAO{
     @Override
     public ResultSet getProductsByBrand(String brand) {
         try(Connection conn = DBUtil.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM products WHERE brand = ?");
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM products WHERE brand ILIKE ?");
             ps.setString(1, brand);
             return ps.executeQuery();
         } catch (Exception e) {
@@ -140,10 +143,15 @@ public class ProductDAOImpl implements IProductDAO{
     }
 
     @Override
-    public ResultSet getProductsByStock(int stock) {
+    public ResultSet getProductsByStock(boolean stock) {
         try(Connection conn = DBUtil.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM products WHERE stock = ?");
-            ps.setInt(1, stock);
+            String sql;
+            if (stock) {
+                sql = "SELECT * FROM products WHERE stock = 0";
+            } else {
+                sql = "SELECT * FROM products WHERE stock > 0";
+            }
+            PreparedStatement ps = conn.prepareStatement(sql);
             return ps.executeQuery();
         } catch (Exception e) {
             System.out.println("Lỗi khi fetching sản phẩm theo số lượng tồn kho: " + e.getMessage());

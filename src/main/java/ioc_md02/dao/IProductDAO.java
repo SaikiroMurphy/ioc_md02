@@ -13,5 +13,5 @@ public interface IProductDAO {
     ResultSet getProductsByBrand(String brand);
     ResultSet getProductsByPriceRange(double minPrice, double maxPrice);
     ResultSet getProductsByName(String name);
-    ResultSet getProductsByStock(int stock);
+    ResultSet getProductsByStock(boolean stock);
 }
