@@ -30,6 +30,7 @@ public class ProductDAOImpl implements IProductDAO{
             ps.setDouble(3, product.getPrice());
             ps.setInt(4, product.getStock());
             if (ps.executeUpdate() == 0){
+                System.out.println("Không có dữ liệu nào được thêm vào. Vui lòng kiểm tra lại thông tin.");
                 return false;
             }
             return true;
@@ -49,6 +50,7 @@ public class ProductDAOImpl implements IProductDAO{
             ps.setInt(4, product.getStock());
             ps.setInt(5, id);
             if (ps.executeUpdate() == 0) {
+                System.out.println("Không có dữ liệu nào được cập nhật. Vui lòng kiểm tra lại thông tin.");
                 return false;
             }
             return true;
@@ -64,6 +66,8 @@ public class ProductDAOImpl implements IProductDAO{
             PreparedStatement ps = conn.prepareStatement("DELETE FROM products WHERE id = ?");
             ps.setInt(1, id);
             if (ps.executeUpdate() == 0) {
+                System.out.println("Không có dữ liệu nào được xóa đi. Vui lòng kiểm tra lại thông tin.");
+
                 return false;
             }
             return true;

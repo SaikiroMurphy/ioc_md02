@@ -2,8 +2,12 @@ package ioc_md02.model;
 
 import java.util.Scanner;
 
+import ioc_md02.dao.impl.CustomerDAOImpl;
+
 public class Customer implements IModel{
-    private int id;
+    private static final String PHONE_REGEX = "^(0|\\+84)\\d{9}$";
+    private static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+    private Integer id;
     private String name;
     private String phone;
     private String email;
@@ -62,8 +66,13 @@ public class Customer implements IModel{
 
     @Override
     public String toString() {
-        return "Customer [id=" + id + ", name=" + name + ", phone=" + phone + ", email=" + email + ", address="
-                + address + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append(String.format("|%-5d", id));
+        builder.append(String.format("|%-50s", name));
+        builder.append(String.format("|%-15s", phone));
+        builder.append(String.format("|%-50s", email));
+        builder.append(String.format("|%-20s|", address));
+        return builder.toString();
     }
 
     @Override
@@ -77,12 +86,36 @@ public class Customer implements IModel{
             System.out.println("Tên khách hàng không được để trống!");
         }
 
-        System.out.print("Nhập số điện thoại: ");
-        this.phone = scanner.nextLine();
-        System.out.print("Nhập email: ");
-        this.email = scanner.nextLine();
-        System.out.print("Nhập địa chỉ: ");
-        this.address = scanner.nextLine();
+        while (true) {
+            System.out.print("Nhập số điện thoại cá nhân: ");
+            this.phone = scanner.nextLine();
+            if (this.phone.trim().matches(PHONE_REGEX)) {
+                break;
+            }
+            System.out.println("Số điện thoại không hợp lệ!");
+        }
+
+        while (true) {
+            System.out.print("Nhập Email: ");
+            this.email = scanner.nextLine();
+            if (this.email.trim().isEmpty() || !this.email.trim().matches(EMAIL_REGEX)) {
+                System.out.println("Email không hợp lệ!");
+                continue;
+            } else if (CustomerDAOImpl.getInstance().getCustomerByEmail(this.email.trim(), this.id)) {
+                System.out.println("Email đã tồn tại!");
+                continue;
+            }
+            break;
+        }
+
+        while (true) {
+            System.out.print("Nhập địa chỉ thường trú: ");
+            this.address = scanner.nextLine();
+            if (!this.address.trim().isEmpty()) {
+                break;
+            }
+            System.out.println("Địa chỉ không được để trống!");
+        }
     }
 
 }

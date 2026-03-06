@@ -75,7 +75,7 @@ public class AdminView {
                     System.out.println("Chức năng quản lý hóa đơn đang được phát triển...");
                     break;
                 case 3:
-                    System.out.println("Chức năng quản lý khách hàng đang được phát triển...");
+                    CustomerView.getInstance().showCustomerMenu(scanner);
                     break;
                 case 4:
                     System.out.println("Chức năng thống kê doanh thu đang được phát triển...");

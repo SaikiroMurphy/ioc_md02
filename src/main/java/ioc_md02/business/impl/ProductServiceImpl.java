@@ -263,7 +263,7 @@ public class ProductServiceImpl implements IProductService{
         System.out.println(
                 "+-----+--------------------------------------------------+--------------------+------------+-----+");
         try {
-            while (rs.next()) {
+            do {
                 product = new Product(
                         rs.getInt("id"),
                         rs.getString("name"),
@@ -271,7 +271,7 @@ public class ProductServiceImpl implements IProductService{
                         rs.getDouble("price"),
                         rs.getInt("stock"));
                 System.out.println(product);
-            }
+            } while (rs.next());
         } catch (Exception e) {
             System.out.println("Lỗi khi fetching sản phẩm: " + e.getMessage());
         } finally {
