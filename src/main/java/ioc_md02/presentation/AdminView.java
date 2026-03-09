@@ -72,7 +72,7 @@ public class AdminView {
                     ProductView.getInstance().showProductMenu(scanner);
                     break;
                 case 2:
-                    System.out.println("Chức năng quản lý hóa đơn đang được phát triển...");
+                    InvoiceView.getInstance().showInvoiceMenu(scanner);
                     break;
                 case 3:
                     CustomerView.getInstance().showCustomerMenu(scanner);

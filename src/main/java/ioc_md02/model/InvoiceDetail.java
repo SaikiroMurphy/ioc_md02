@@ -2,6 +2,9 @@ package ioc_md02.model;
 
 import java.util.Scanner;
 
+import ioc_md02.business.impl.ProductServiceImpl;
+import ioc_md02.dao.impl.ProductDAOImpl;
+
 public class InvoiceDetail implements IModel{
     private int id;
     private int invoiceId;
@@ -63,14 +66,45 @@ public class InvoiceDetail implements IModel{
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("|%-5d|%-10d|%-15d|%-10d|%-10.2f|", id, invoiceId, productId, quantity, unitPrice));
+        sb.append(String.format("|%-50s|%-10.2f|%-5d|%-15.2f|", ProductDAOImpl.getInstance().getProductById(id).getName(), unitPrice, quantity, (quantity*unitPrice)));
         return sb.toString();
     }
 
     @Override
     public void inputData(Scanner scanner) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'inputData'");
+        ProductServiceImpl.getInstance().getAllProducts();
+
+        while (true) {
+            try {
+                System.out.print("Nhập ID điện thoại muốn thêm: ");
+                this.productId = Integer.parseInt(scanner.nextLine());
+
+                Product product = ProductDAOImpl.getInstance().getProductById(this.productId);
+                if(product != null) {
+                    this.unitPrice = product.getPrice();
+                    break;
+                }
+                System.out.println("Không có điện thoại nào có ID = " + this.productId);
+
+            } catch (IllegalArgumentException e) {
+                System.out.println("Số nhập vào không hợp lệ!");
+            }
+        }
+
+        while (true) {
+            try {
+                System.out.print("Nhập số lượng muốn mua: ");
+                this.quantity = Integer.parseInt(scanner.nextLine());
+
+                if (this.quantity > 0) {
+                    break;
+                }
+                System.out.println("Số lượng điện thoại muốn thêm phải lớn hơn 0!");
+
+            } catch (IllegalArgumentException e) {
+                System.out.println("Số nhập vào không hợp lệ!");
+            }
+        }
     }
 
 }

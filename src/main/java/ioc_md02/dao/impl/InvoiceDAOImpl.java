@@ -3,9 +3,13 @@ package ioc_md02.dao.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 
 import ioc_md02.dao.IInvoiceDAO;
 import ioc_md02.model.Invoice;
+import ioc_md02.model.InvoiceDetail;
 import ioc_md02.utils.DBUtil;
 
 public class InvoiceDAOImpl implements IInvoiceDAO{
@@ -24,13 +28,26 @@ public class InvoiceDAOImpl implements IInvoiceDAO{
     @Override
     public boolean addInvoice(Invoice invoice) {
         try(Connection conn = DBUtil.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO invoices (customer_id, created_at, total_amount) VALUES (?, ?, ?)");
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO invoices (customer_id, total_amount) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setInt(1, invoice.getCustomerId());
-            stmt.setString(2, invoice.getCreatedAt().toString());
-            stmt.setDouble(3, invoice.getTotalAmount());
-            stmt.execute();
+            stmt.setDouble(2, invoice.getTotalAmount());
+
+            if (stmt.executeUpdate() == 0) {
+                System.out.println("Không có dữ liệu nào được thêm vào. Vui lòng kiểm tra lại thông tin.");
+                return false;
+            }
+
+            ResultSet rs = stmt.getGeneratedKeys();
+            rs.next();
+            int invoiceId = rs.getInt(1);
+            for (InvoiceDetail item : invoice.getItems()) {
+                item.setInvoiceId(invoiceId);
+                InvoiceDetailDAOImpl.getInstance().addInvoiceDetail(item);
+            }
             return true;
+
         } catch (Exception e) {
+            System.out.println("Lỗi khi thêm hóa đơn: " + e.getMessage());
             return false;
         }
 
@@ -48,10 +65,10 @@ public class InvoiceDAOImpl implements IInvoiceDAO{
     }
 
     @Override
-    public ResultSet getInvoicesByCustomerId(int customerId) {
+    public ResultSet getInvoicesByCustomerName(String customerName) {
         try(Connection conn = DBUtil.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM invoices WHERE customer_id = ?");
-            stmt.setInt(1, customerId);
+            PreparedStatement stmt = conn.prepareStatement("SELECT inv.* FROM invoices inv JOIN customers c ON inv.customer_id = c.id WHERE c.name LIKE ?");
+            stmt.setString(1, customerName);
             return stmt.executeQuery();
         } catch (Exception e) {
             System.out.println("Lỗi khi fetching hóa đơn: " + e.getMessage());
@@ -60,15 +77,37 @@ public class InvoiceDAOImpl implements IInvoiceDAO{
     }
 
     @Override
-    public ResultSet getInvoicesByDate(String date) {
+    public ResultSet getInvoicesByDate(LocalDate date) {
         try(Connection conn = DBUtil.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM invoices WHERE DATE(created_at) = ?");
-            stmt.setString(1, date);
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM invoices WHERE created_at >= ? AND created_at < ?");
+            stmt.setTimestamp(1, Timestamp.valueOf(date.atStartOfDay()));
+            stmt.setTimestamp(2, Timestamp.valueOf(date.atStartOfDay().plusDays(1)));
             return stmt.executeQuery();
         } catch (Exception e) {
             System.out.println("Lỗi khi fetching hóa đơn: " + e.getMessage());
             return null;
         }
+    }
+
+    @Override
+    public Invoice getInvoicesById(int id) {
+            try(Connection conn = DBUtil.getConnection()) {
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM invoices WHERE id = ?");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()) {
+                return new Invoice(
+                    rs.getInt("id"),
+                    rs.getInt("customer_id"),
+                    rs.getTimestamp("created_at").toLocalDateTime(),
+                    rs.getDouble("total_amount")
+                );
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi khi fetching hóa đơn: " + e.getMessage());
+        }
+        return null;
+
     }
 
 }

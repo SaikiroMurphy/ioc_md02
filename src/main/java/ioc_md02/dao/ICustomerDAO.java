@@ -11,4 +11,5 @@ public interface ICustomerDAO {
     Customer getCustomerById(int id);
     boolean getCustomerByEmail(String email, Integer id);
     ResultSet getAllCustomers();
+    Customer getCustomerByName(String name);
 }

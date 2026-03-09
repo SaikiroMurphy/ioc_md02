@@ -88,6 +88,21 @@ public class CustomerServiceImpl implements ICustomerService{
             }
         }
 
+        Customer oldCustomer = CustomerDAOImpl.getInstance().getCustomerById(delCustomerId);
+
+        if (oldCustomer == null) {
+            System.out.println("Không tìm thấy khách hàng nào với ID phù hợp.");
+            return;
+        }
+
+        displayCustomers(oldCustomer);
+        System.out.print("Bạn có chắc chắn muốn xóa khách hàng này? (true/false): ");
+        boolean cf = Boolean.parseBoolean(scanner.nextLine());
+        if (!cf) {
+            System.out.println("Không xóa khách hàng. Trở về menu quản lý.");
+            return;
+        }
+
         if (CustomerDAOImpl.getInstance().deleteCustomer(delCustomerId)) {
             System.out.println("Xóa khách hàng thành công!");
         } else {

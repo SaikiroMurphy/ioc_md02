@@ -29,11 +29,15 @@ public class InvoiceDetailDAOImpl implements IInvoiceDetailDAO{
             ps.setInt(2, invoiceDetail.getProductId());
             ps.setInt(3, invoiceDetail.getQuantity());
             ps.setDouble(4, invoiceDetail.getUnitPrice());
-            ps.execute();
+            if (ps.executeUpdate() == 0) {
+                System.out.println("Không có dữ liệu nào được thêm vào. Vui lòng kiểm tra lại thông tin.");
+                return false;
+            }
             return true;
         } catch (Exception e) {
             return false;
         }
+
     }
 
     @Override

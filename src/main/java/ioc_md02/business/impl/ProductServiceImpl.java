@@ -103,6 +103,22 @@ public class ProductServiceImpl implements IProductService{
             }
         }
 
+        Product oldProduct = ProductDAOImpl.getInstance().getProductById(delProductId);
+
+        if (oldProduct == null) {
+            System.out.println("Không tìm thấy điện thoại nào với ID phù hợp.");
+            return;
+        }
+
+        displayProducts(oldProduct);
+
+        System.out.print("Bạn có chắc chắn muốn xóa điện thoại này? (true/false): ");
+        boolean cf = Boolean.parseBoolean(scanner.nextLine());
+        if(!cf) {
+            System.out.println("Không xóa điện thoại. Trở về menu quản lý.");
+            return;
+        }
+
         if (ProductDAOImpl.getInstance().deleteProduct(delProductId)) {
             System.out.println("Xóa điện thoại thành công!");
         } else {
@@ -283,6 +299,7 @@ public class ProductServiceImpl implements IProductService{
 
     @Override
     public void displayProducts(Product product) {
+        System.out.println();
         System.out.println(
                 "+------------------------------------- DANH SÁCH ĐIỆN THOẠI -------------------------------------+");
         System.out.println(

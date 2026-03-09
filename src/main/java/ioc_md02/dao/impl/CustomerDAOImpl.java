@@ -73,6 +73,10 @@ public class CustomerDAOImpl implements ICustomerDAO{
             }
             return true;
         } catch (Exception e) {
+            if (e.getMessage().contains("violates foreign key constraint")) {
+                System.out.println("Không thể xóa khách hàng đang có hóa đơn!");
+                return false;
+            }
             System.out.println("Lỗi khi xóa khách hàng: " + e.getMessage());
             return false;
         }
@@ -132,5 +136,26 @@ public class CustomerDAOImpl implements ICustomerDAO{
         }
 
         return true;
+    }
+
+    @Override
+    public Customer getCustomerByName(String name) {
+        try (Connection conn = DBUtil.getConnection()) {
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM customers WHERE name ILIKE ?");
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new Customer(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("phone"),
+                        rs.getString("email"),
+                        rs.getString("address"));
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi khi fetching khách hàng: " + e.getMessage());
+        }
+        return null;
+
     }
 }
