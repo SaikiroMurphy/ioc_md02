@@ -67,8 +67,8 @@ public class InvoiceDAOImpl implements IInvoiceDAO{
     @Override
     public ResultSet getInvoicesByCustomerName(String customerName) {
         try(Connection conn = DBUtil.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT inv.* FROM invoices inv JOIN customers c ON inv.customer_id = c.id WHERE c.name LIKE ?");
-            stmt.setString(1, customerName);
+            PreparedStatement stmt = conn.prepareStatement("SELECT inv.* FROM invoices inv JOIN customers c ON inv.customer_id = c.id WHERE unaccent(c.name) ILIKE unaccent(?)");
+            stmt.setString(1, "%" + customerName + "%");
             return stmt.executeQuery();
         } catch (Exception e) {
             System.out.println("Lỗi khi fetching hóa đơn: " + e.getMessage());

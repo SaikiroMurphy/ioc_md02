@@ -1,4 +1,5 @@
 CREATE DATABASE phone_store;
+CREATE EXTENSION IF NOT EXISTS unaccent;
 
 DROP TABLE IF EXISTS invoice_details;
 DROP TABLE IF EXISTS products;
