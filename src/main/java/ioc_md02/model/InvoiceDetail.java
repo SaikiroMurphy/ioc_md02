@@ -66,7 +66,7 @@ public class InvoiceDetail implements IModel{
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("|%-50s|%-10.2f|%-5d|%-15.2f|", ProductDAOImpl.getInstance().getProductById(id).getName(), unitPrice, quantity, (quantity*unitPrice)));
+        sb.append(String.format("|%-50s|%-12.2f|%-10d|%-15.2f|", ProductDAOImpl.getInstance().getProductById(productId).getName(), unitPrice, quantity, (quantity*unitPrice)));
         return sb.toString();
     }
 

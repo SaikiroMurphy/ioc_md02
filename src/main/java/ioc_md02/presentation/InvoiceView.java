@@ -37,7 +37,7 @@ public class InvoiceView {
 
             switch (choice) {
                 case 1:
-                    InvoiceServiceImpl.getInstance().getAllInvoices();
+                    InvoiceServiceImpl.getInstance().getAllInvoices(scanner);
                     break;
                 case 2:
                     InvoiceServiceImpl.getInstance().addInvoice(scanner);
@@ -73,10 +73,10 @@ public class InvoiceView {
 
             switch (choice) {
                 case 1:
-                    InvoiceServiceImpl.getInstance().getInvoicesByCustomerName(scanner);;
+                    InvoiceServiceImpl.getInstance().getInvoicesByCustomerName(scanner);
                     break;
                 case 2:
-                    InvoiceServiceImpl.getInstance().getInvoicesByDate(scanner);;
+                    InvoiceServiceImpl.getInstance().getInvoicesByDate(scanner);
                     break;
                 case 3:
                     return;

@@ -107,17 +107,15 @@ public class Invoice implements IModel{
         }
 
         this.items = new ArrayList<>();
-        while (true) {
+        boolean add = true;
+        do {
             InvoiceDetail item = new InvoiceDetail();
-            System.out.print("Bạn muốn thêm sản phẩm vào hóa đơn? (true/false): ");
-            boolean add = Boolean.parseBoolean(scanner.nextLine());
-            if (add == true) {
-                item.inputData(scanner);
-                items.add(item);
-                continue;
-            }
-            break;
-        }
+            item.inputData(scanner);
+            items.add(item);
+
+            System.out.print("Bạn muốn thêm sản phẩm nữa vào hóa đơn? (true/false): ");
+            add = Boolean.parseBoolean(scanner.nextLine());
+        } while (add);
 
         for (InvoiceDetail item : items) {
             this.totalAmount += (item.getUnitPrice() * item.getQuantity());

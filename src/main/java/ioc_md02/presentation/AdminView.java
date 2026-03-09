@@ -22,7 +22,7 @@ public class AdminView {
             System.out.println("======= HỆ THỐNG QUẢN LÝ CỬA HÀNG ĐIỆN THOẠI =======");
             System.out.printf("|%-50s|%n", "1. Đăng nhập");
             System.out.printf("|%-50s|%n", "2. Thoát");
-            System.out.println("=====================================================");
+            System.out.println("====================================================");
 
             int choice = -1;
             try {

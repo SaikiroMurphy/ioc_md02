@@ -3,6 +3,7 @@ package ioc_md02.business.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 import ioc_md02.business.IInvoiceService;
@@ -40,7 +41,7 @@ public class InvoiceServiceImpl implements IInvoiceService{
     }
 
     @Override
-    public void getAllInvoices() {
+    public void getAllInvoices(Scanner scanner) {
         ResultSet invoices = InvoiceDAOImpl.getInstance().getAllInvoices();
 
         try {
@@ -54,6 +55,8 @@ public class InvoiceServiceImpl implements IInvoiceService{
         }
 
         displayInvoices(invoices);
+        InvoiceDetailServiceImpl.getInstance().getInvoiceDetailsByInvoiceId(scanner);
+
     }
 
     @Override
@@ -78,12 +81,14 @@ public class InvoiceServiceImpl implements IInvoiceService{
                 System.out.println("Không tìm thấy hóa đơn nào của khách hàng " + filterName);
                 return;
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
             return;
         }
 
         displayInvoices(invoices);
+        InvoiceDetailServiceImpl.getInstance().getInvoiceDetailsByInvoiceId(scanner);
     }
 
     @Override
@@ -98,7 +103,7 @@ public class InvoiceServiceImpl implements IInvoiceService{
                 System.out.print("Nhập ngày muốn tìm(dd/mm/yyyy): ");
                 filterDate = LocalDate.parse(scanner.nextLine(), Invoice.formatter);
                 break;
-            } catch (IllegalArgumentException e) {
+            } catch (DateTimeParseException e) {
                 System.out.println("Ngày không hợp lệ!");
             }
         }
@@ -106,7 +111,7 @@ public class InvoiceServiceImpl implements IInvoiceService{
         ResultSet invoices = InvoiceDAOImpl.getInstance().getInvoicesByDate(filterDate);
         try {
             if (!invoices.next()) {
-                System.out.println("Không tìm thấy hóa đơn nào của khách hàng " + filterDate);
+                System.out.println("Không tìm thấy hóa đơn nào trong ngày " + filterDate.format(Invoice.formatter));
                 return;
             }
         } catch (SQLException e) {
@@ -115,6 +120,7 @@ public class InvoiceServiceImpl implements IInvoiceService{
         }
 
         displayInvoices(invoices);
+        InvoiceDetailServiceImpl.getInstance().getInvoiceDetailsByInvoiceId(scanner);
     }
 
     @Override
@@ -157,13 +163,15 @@ public class InvoiceServiceImpl implements IInvoiceService{
         System.out.printf("Mã hóa đơn:\t%d\n", invoice.getId());
         System.out.printf("Khách hàng:\t%s\n", CustomerDAOImpl.getInstance().getCustomerById(invoice.getCustomerId()).getName());
         System.out.printf("Ngày tạo:\t%s\n", invoice.getCreatedAt().format(Invoice.formatter));
-        System.out.println("+-------------------------------------------------+----------+-----+---------------+");
-        System.out.printf("|%-50s|%-10s|%-5s|%-15s|\n", "TÊN ĐIỆN THOẠI", "ĐƠN GIÁ", "SỐ LƯỢNG", "THÀNH TIỀN");
-        System.out.println("+-------------------------------------------------+----------+-----+---------------+");
+        System.out.println("+--------------------------------------------------+------------+----------+---------------+");
+        System.out.printf("|%-50s|%-12s|%-10s|%-15s|\n", "TÊN ĐIỆN THOẠI", "ĐƠN GIÁ", "SỐ LƯỢNG", "THÀNH TIỀN");
+        System.out.println("+--------------------------------------------------+------------+----------+---------------+");
         for (InvoiceDetail item : invoice.getItems()) {
             System.out.println(item);
-            System.out.println("+-------------------------------------------------+----------+-----+---------------+");
+            System.out.println("+--------------------------------------------------+------------+----------+---------------+");
         }
+        System.out.printf("TỔNG HÓA ĐƠN: %.2f\n", invoice.getTotalAmount());
+        System.out.println();
     }
 
 
