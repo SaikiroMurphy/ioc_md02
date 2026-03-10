@@ -1,6 +1,6 @@
 package ioc_md02.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -12,12 +12,12 @@ public class Invoice implements IModel{
 
     private int id;
     private int customerId;
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
     private double totalAmount;
     private ArrayList<InvoiceDetail> items;
 
 
-    public Invoice(int id, int customerId, LocalDateTime createdAt, double totalAmount) {
+    public Invoice(int id, int customerId, LocalDate createdAt, double totalAmount) {
         this.id = id;
         this.customerId = customerId;
         this.createdAt = createdAt;
@@ -49,12 +49,12 @@ public class Invoice implements IModel{
     }
 
 
-    public LocalDateTime getCreatedAt() {
+    public LocalDate getCreatedAt() {
         return createdAt;
     }
 
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
 

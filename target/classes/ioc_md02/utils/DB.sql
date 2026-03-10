@@ -26,10 +26,12 @@ CREATE TABLE admins (
     password VARCHAR(255) NOT NULL
 );
 
+DROP TABLE IF EXISTS invoices;
+
 CREATE TABLE invoices (
     id SERIAL PRIMARY KEY,
     customer_id INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at DATE DEFAULT CURRENT_TIMESTAMP,
     total_amount DECIMAL(12, 2) NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES customers(id)
 );

@@ -143,7 +143,7 @@ public class InvoiceServiceImpl implements IInvoiceService{
                 invoice = new Invoice(
                         rs.getInt("id"),
                         rs.getInt("customer_id"),
-                        rs.getTimestamp("created_at").toLocalDateTime(),
+                        rs.getDate("created_at").toLocalDate(),
                         rs.getDouble("total_amount"));
                 System.out.println(invoice);
             } while (rs.next());
@@ -159,7 +159,7 @@ public class InvoiceServiceImpl implements IInvoiceService{
     @Override
     public void displayInvoices(Invoice invoice) {
         System.out.println();
-        System.out.println("=============== HÓA ĐƠN ===============");
+        System.out.println("===================== HÓA ĐƠN =====================");
         System.out.printf("Mã hóa đơn:\t%d\n", invoice.getId());
         System.out.printf("Khách hàng:\t%s\n", CustomerDAOImpl.getInstance().getCustomerById(invoice.getCustomerId()).getName());
         System.out.printf("Ngày tạo:\t%s\n", invoice.getCreatedAt().format(Invoice.formatter));
@@ -171,6 +171,8 @@ public class InvoiceServiceImpl implements IInvoiceService{
             System.out.println("+--------------------------------------------------+------------+----------+---------------+");
         }
         System.out.printf("TỔNG HÓA ĐƠN: %.2f\n", invoice.getTotalAmount());
+        System.out.println("===================================================");
+
         System.out.println();
     }
 

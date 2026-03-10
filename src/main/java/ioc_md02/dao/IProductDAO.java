@@ -8,10 +8,13 @@ public interface IProductDAO {
     boolean addProduct(Product product);
     boolean updateProduct(int id, Product product);
     boolean deleteProduct(int id);
+    boolean updateStockById(int productId, int stock);
     Product getProductById(int id);
     ResultSet getAllProducts();
     ResultSet getProductsByBrand(String brand);
     ResultSet getProductsByPriceRange(double minPrice, double maxPrice);
     ResultSet getProductsByName(String name);
     ResultSet getProductsByStock(boolean stock);
+    int getStockById(int id);
+
 }

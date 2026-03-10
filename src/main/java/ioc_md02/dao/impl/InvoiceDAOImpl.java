@@ -1,10 +1,10 @@
 package ioc_md02.dao.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 
 import ioc_md02.dao.IInvoiceDAO;
@@ -41,6 +41,7 @@ public class InvoiceDAOImpl implements IInvoiceDAO{
             rs.next();
             int invoiceId = rs.getInt(1);
             for (InvoiceDetail item : invoice.getItems()) {
+                ProductDAOImpl.getInstance().updateStockById(item.getProductId(), item.getQuantity());
                 item.setInvoiceId(invoiceId);
                 InvoiceDetailDAOImpl.getInstance().addInvoiceDetail(item);
             }
@@ -79,9 +80,8 @@ public class InvoiceDAOImpl implements IInvoiceDAO{
     @Override
     public ResultSet getInvoicesByDate(LocalDate date) {
         try(Connection conn = DBUtil.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM invoices WHERE created_at >= ? AND created_at < ?");
-            stmt.setTimestamp(1, Timestamp.valueOf(date.atStartOfDay()));
-            stmt.setTimestamp(2, Timestamp.valueOf(date.atStartOfDay().plusDays(1)));
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM invoices WHERE created_at = ?");
+            stmt.setDate(1, Date.valueOf(date));
             return stmt.executeQuery();
         } catch (Exception e) {
             System.out.println("Lỗi khi fetching hóa đơn: " + e.getMessage());
@@ -99,7 +99,7 @@ public class InvoiceDAOImpl implements IInvoiceDAO{
                 return new Invoice(
                     rs.getInt("id"),
                     rs.getInt("customer_id"),
-                    rs.getTimestamp("created_at").toLocalDateTime(),
+                    rs.getDate("created_at").toLocalDate(),
                     rs.getDouble("total_amount")
                 );
             }

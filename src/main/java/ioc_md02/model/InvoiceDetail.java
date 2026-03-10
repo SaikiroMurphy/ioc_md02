@@ -80,11 +80,17 @@ public class InvoiceDetail implements IModel{
                 this.productId = Integer.parseInt(scanner.nextLine());
 
                 Product product = ProductDAOImpl.getInstance().getProductById(this.productId);
-                if(product != null) {
-                    this.unitPrice = product.getPrice();
-                    break;
+                if(product == null) {
+                    System.out.println("Không có điện thoại nào có ID = " + this.productId);
+                    continue;
+
+                } else if(product.getStock() == 0) {
+                    System.out.println("Điện thoại hết hàng tồn kho.");
+                    continue;
                 }
-                System.out.println("Không có điện thoại nào có ID = " + this.productId);
+
+                this.unitPrice = product.getPrice();
+                break;
 
             } catch (IllegalArgumentException e) {
                 System.out.println("Số nhập vào không hợp lệ!");
@@ -96,10 +102,20 @@ public class InvoiceDetail implements IModel{
                 System.out.print("Nhập số lượng muốn mua: ");
                 this.quantity = Integer.parseInt(scanner.nextLine());
 
-                if (this.quantity > 0) {
+                if (this.quantity <= 0) {
+                    System.out.println("Số lượng điện thoại muốn thêm phải lớn hơn 0!");
+                    continue;
+                } else {
+                    int stock = ProductDAOImpl.getInstance().getStockById(this.productId);
+                    if (stock == -1) {
+                        System.out.println("Lấy thông tin tồn kho sản phẩm thất bại.");
+                        continue;
+                    } else if(stock < this.quantity) {
+                        System.out.println("Số lượng sản phẩm tồn kho không đủ: " + stock);
+                        continue;
+                    }
                     break;
                 }
-                System.out.println("Số lượng điện thoại muốn thêm phải lớn hơn 0!");
 
             } catch (IllegalArgumentException e) {
                 System.out.println("Số nhập vào không hợp lệ!");

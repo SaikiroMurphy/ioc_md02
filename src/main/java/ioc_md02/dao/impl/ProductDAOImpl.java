@@ -163,4 +163,38 @@ public class ProductDAOImpl implements IProductDAO{
         return null;
     }
 
+    @Override
+    public int getStockById(int id) {
+        try(Connection conn = DBUtil.getConnection()) {
+            PreparedStatement ps = conn.prepareStatement("SELECT stock FROM products WHERE id = ?");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("stock");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Lỗi khi fetching tồn kho sản phẩm theo id: " + e.getMessage());
+        }
+        return -1;
+    }
+
+    @Override
+    public boolean updateStockById(int productId, int stock) {
+        try (Connection conn = DBUtil.getConnection()) {
+            PreparedStatement ps = conn.prepareStatement("UPDATE products SET stock = stock - ? WHERE id = ?");
+            ps.setInt(1, stock);
+            ps.setInt(2, productId);
+            if (ps.executeUpdate() == 0) {
+                System.out.println("Không có dữ liệu nào được cập nhật. Vui lòng kiểm tra lại thông tin.");
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            System.out.println("Lỗi khi cập nhật tồn kho sản phẩm: " + e.getMessage());
+            return false;
+        }
+
+    }
+
 }
