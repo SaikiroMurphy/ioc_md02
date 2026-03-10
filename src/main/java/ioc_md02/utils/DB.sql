@@ -1,9 +1,6 @@
 CREATE DATABASE phone_store;
 CREATE EXTENSION IF NOT EXISTS unaccent;
 
-DROP TABLE IF EXISTS invoice_details;
-DROP TABLE IF EXISTS products;
-
 CREATE TABLE products (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -26,8 +23,6 @@ CREATE TABLE admins (
     password VARCHAR(255) NOT NULL
 );
 
-DROP TABLE IF EXISTS invoices;
-
 CREATE TABLE invoices (
     id SERIAL PRIMARY KEY,
     customer_id INT NOT NULL,
@@ -35,8 +30,6 @@ CREATE TABLE invoices (
     total_amount DECIMAL(12, 2) NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES customers(id)
 );
-
-DROP TABLE IF EXISTS invoice_details;
 
 CREATE TABLE invoice_details (
     id SERIAL PRIMARY KEY,
