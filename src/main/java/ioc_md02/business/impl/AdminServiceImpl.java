@@ -1,5 +1,6 @@
 package ioc_md02.business.impl;
 
+import java.sql.ResultSet;
 import java.util.Scanner;
 
 import ioc_md02.business.IAdminSerrvice;
@@ -56,6 +57,32 @@ public class AdminServiceImpl implements IAdminSerrvice{
             }
 
         } while (true);
+    }
+
+    @Override
+    public void showStatistic(ResultSet rs) {
+        System.out.println();
+        System.out.println("=============== THỐNG KÊ DOANH THU ===============");
+        System.out.println("Các sản phẩm đã bán được: ");
+        System.out.println("Tổng doanh thu: ");
+    }
+
+    @Override
+    public void getStatisticByDay(Scanner scanner) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getStatisticByDay'");
+    }
+
+    @Override
+    public void getStatisticByMonth(Scanner scanner) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getStatisticByMonth'");
+    }
+
+    @Override
+    public void getStatisticByYear(Scanner scanner) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getStatisticByYear'");
     }
 
 }

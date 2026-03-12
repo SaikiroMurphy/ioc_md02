@@ -16,6 +16,42 @@ public class AdminView {
         return instance;
     }
 
+    public void showStatisticMenu(Scanner scanner) {
+        while (true) {
+            System.out.println();
+            System.out.println("================ THỐNG KÊ DOANH THU ================");
+            System.out.printf("|%-50s|%n", "1. Doanh thu theo ngày");
+            System.out.printf("|%-50s|%n", "2. Doanh thu theo tháng");
+            System.out.printf("|%-50s|%n", "3. Doanh thu theo năm");
+            System.out.printf("|%-50s|%n", "4. Quay lại menu chính");
+            System.out.println("====================================================");
+
+            int choice = -1;
+            try {
+                System.out.print("Vui lòng chọn (1-4): ");
+                choice = Integer.parseInt(scanner.nextLine());
+
+            } catch (NumberFormatException e) {
+                System.out.println("Vui lòng nhập một số hợp lệ!");
+                continue;
+            }
+
+            switch (choice) {
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    return;
+                default:
+                    System.out.println("Lựa chọn không hợp lệ!");
+            }
+
+        }
+    }
+
     public void showStartMenu(Scanner scanner) {
         while (true) {
             System.out.println();
