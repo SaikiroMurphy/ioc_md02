@@ -38,10 +38,13 @@ public class AdminView {
 
             switch (choice) {
                 case 1:
+                    AdminServiceImpl.getInstance().getStatisticByDay(scanner);
                     break;
                 case 2:
+                    AdminServiceImpl.getInstance().getStatisticByMonth(scanner);
                     break;
                 case 3:
+                    AdminServiceImpl.getInstance().getStatisticByYear(scanner);
                     break;
                 case 4:
                     return;
@@ -114,7 +117,7 @@ public class AdminView {
                     CustomerView.getInstance().showCustomerMenu(scanner);
                     break;
                 case 4:
-                    System.out.println("Chức năng thống kê doanh thu đang được phát triển...");
+                    showStatisticMenu(scanner);
                     break;
                 case 5:
                     System.out.println("Đăng xuất thành công!");
